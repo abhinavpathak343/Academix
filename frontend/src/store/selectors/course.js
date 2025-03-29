@@ -60,7 +60,7 @@ export const courseImage = selector({
   }) => {
     const state = get(courseState);
     if (state.course) {
-      return state.course.image;
+      return state.course.imageLink || ''; // Changed from image to imageLink
     }
     return "";
   },

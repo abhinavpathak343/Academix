@@ -24,10 +24,15 @@ const connectDB = async () => {
 // Schemas
 const courseSchema = new mongoose.Schema({
   title: String,
+  
   description: String,
   price: Number,
   imageLink: String,
-  published: Boolean
+  published: Boolean,
+     admin: {
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'Admin' // Reference to the Admin model
+     }
 });
 
 const adminSchema = new mongoose.Schema({

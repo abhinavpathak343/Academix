@@ -1,4 +1,14 @@
-import { Box, Container, Grid, Card, Typography, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Card,
+  Typography,
+  Button,
+  TextField,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
@@ -68,196 +78,224 @@ function UpdateCard() {
   );
   const [image, setImage] = useState(courseDetails.course.imageLink);
   const [price, setPrice] = useState(courseDetails.course.price);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") return;
+    setOpenSnackbar(false);
+  };
+
+  const resetFields = () => {
+    setTitle(courseDetails.course.title || "");
+    setDescription(courseDetails.course.description || "");
+    setImage(courseDetails.course.imageLink || "");
+    setPrice(courseDetails.course.price || "");
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/admin/courses/${courseDetails.course._id}`,
+        {
+          title,
+          description,
+          imageLink: image,
+          price,
+          published: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      // Update the course state with new data
+      setCourse({
+        course: {
+          ...courseDetails.course,
+          title,
+          description,
+          imageLink: image,
+          price,
+        },
+        isLoading: false,
+      });
+
+      setSnackbarMessage("Course updated successfully!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+
+      // Update text fields with new values
+      setTitle(title);
+      setDescription(description);
+      setImage(image);
+      setPrice(price);
+    } catch (error) {
+      setSnackbarMessage("Failed to update course. Please try again.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    }
+  };
+
+  // First, create a common style object for all TextFields
+  const textFieldStyle = {
+    "& .MuiOutlinedInput-root": {
+      color: "#1A237E", // Add this to fix text color
+      borderRadius: "12px",
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#1A237E",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#1A237E",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#1A237E",
+        borderWidth: "2px",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "#546E7A",
+      "&.Mui-focused": {
+        color: "#1A237E",
+      },
+    },
+    "& .MuiInputBase-input": {
+      color: "#1A237E", // This ensures text is visible
+    },
+  };
 
   return (
-    <Card
-      component={motion.div}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      sx={{
-        borderRadius: "16px",
-        overflow: "hidden",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
-        background: "linear-gradient(135deg, #FFFFFF 0%, #F5F7FA 100%)",
-        p: 3,
-      }}
-    >
-      <Typography
-        variant="h5"
+    <>
+      <Card
+        component={motion.div}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        whileHover={{ y: -10 }}
         sx={{
-          color: "#1A237E",
-          fontWeight: 700,
-          mb: 3,
+          width: "100%",
+          height: "fit-content",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "16px",
+          overflow: "hidden",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+          background: "linear-gradient(135deg, #FFFFFF 0%, #F5F7FA 100%)",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+            background: "linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 100%)",
+          },
         }}
       >
-        Update Course Details
-      </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <TextField
-          label="Title"
-          variant="outlined"
-          fullWidth
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          InputProps={{
-            sx: {
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-            }
-          }}
-          InputLabelProps={{
-            sx: {
-              color: '#1A237E',
-              '&.Mui-focused': {
-                color: '#1A237E',
-              },
-            }
-          }}
-        />
-        <TextField
-          label="Description"
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={3}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          InputProps={{
-            sx: {
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-            }
-          }}
-          InputLabelProps={{
-            sx: {
-              color: '#1A237E',
-              '&.Mui-focused': {
-                color: '#1A237E',
-              },
-            }
-          }}
-        />
-        <TextField
-          label="Image URL"
-          variant="outlined"
-          fullWidth
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          InputProps={{
-            sx: {
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-            }
-          }}
-          InputLabelProps={{
-            sx: {
-              color: '#1A237E',
-              '&.Mui-focused': {
-                color: '#1A237E',
-              },
-            }
-          }}
-        />
-        <TextField
-          label="Price"
-          variant="outlined"
-          fullWidth
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          InputProps={{
-            sx: {
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1A237E',
-              },
-            }
-          }}
-          InputLabelProps={{
-            sx: {
-              color: '#1A237E',
-              '&.Mui-focused': {
-                color: '#1A237E',
-              },
-            }
-          }}
-        />
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={async () => {
-            await axios.put(
-              `${BASE_URL}/admin/courses/${courseDetails.course._id}`,
-              {
-                title,
-                description,
-                imageLink: image,
-                price,
-                published: true,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+        <Box sx={{ p: 3 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              color: "#1A237E",
+              fontWeight: 700,
+              mb: 2,
+            }}
+          >
+            Update Course
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              label="Title"
+              variant="outlined"
+              fullWidth
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              sx={textFieldStyle}
+            />
+            <TextField
+              label="Description"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              sx={textFieldStyle}
+            />
+            <TextField
+              label="Image URL"
+              variant="outlined"
+              fullWidth
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              sx={textFieldStyle}
+            />
+            <TextField
+              label="Price"
+              variant="outlined"
+              fullWidth
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              sx={textFieldStyle}
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handleUpdate}
+              sx={{
+                backgroundColor: "#1A237E",
+                borderRadius: "12px",
+                py: 1.5,
+                textTransform: "none",
+                fontSize: "1rem",
+                boxShadow: "0 8px 16px rgba(26, 35, 126, 0.2)",
+                "&:hover": {
+                  backgroundColor: "#0D47A1",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 20px rgba(26, 35, 126, 0.3)",
                 },
-              }
-            );
-
-            setCourse({
-              course: {
-                ...courseDetails.course,
-                title,
-                description,
-                imageLink: image,
-                price,
-              },
-              isLoading: false,
-            });
-          }}
+                transition: "all 0.3s ease",
+              }}
+            >
+              Update Course
+            </Button>
+          </Box>
+        </Box>
+      </Card>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{
+          marginTop: "20px",
+        }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          variant="filled"
           sx={{
-            backgroundColor: "#1A237E",
+            width: "100%",
+            backgroundColor:
+              snackbarSeverity === "success" ? "#1A237E" : "#d32f2f",
+            color: "white",
             borderRadius: "12px",
-            py: 1.5,
-            textTransform: "none",
-            fontSize: "1rem",
-            boxShadow: "0 8px 16px rgba(26, 35, 126, 0.2)",
-            "&:hover": {
-              backgroundColor: "#0D47A1",
-              transform: "translateY(-2px)",
-              boxShadow: "0 12px 20px rgba(26, 35, 126, 0.3)",
+            boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
+            "& .MuiAlert-icon": {
+              color: "white",
             },
-            transition: "all 0.3s ease",
+            "& .MuiAlert-action": {
+              color: "white",
+            },
+            fontSize: "1rem",
+            alignItems: "center",
           }}
         >
-          Update Course
-        </Button>
-      </Box>
-    </Card>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 
@@ -275,6 +313,7 @@ function CourseCard() {
       whileHover={{ y: -10 }}
       sx={{
         width: "100%",
+        height: "fit-content",
         display: "flex",
         flexDirection: "column",
         borderRadius: "16px",
@@ -290,19 +329,17 @@ function CourseCard() {
     >
       <Box
         sx={{
+          width: "100%",
+          height: 200,
           position: "relative",
-          paddingTop: "56.25%", // 16:9 aspect ratio
           overflow: "hidden",
+          backgroundColor: "#f5f5f5",
         }}
       >
         <Box
           component="img"
-          src={imageLink || "/api/placeholder/400/320"}
+          src={imageLink}
           alt={title}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "/api/placeholder/400/320";
-          }}
           sx={{
             position: "absolute",
             top: 0,
@@ -315,6 +352,11 @@ function CourseCard() {
               transform: "scale(1.05)",
             },
           }}
+          onError={(e) => {
+            e.target.src =
+              "https://via.placeholder.com/400x300?text=Course+Image";
+            e.target.onerror = null; // Prevents infinite loop if placeholder also fails
+          }}
         />
       </Box>
 
@@ -323,7 +365,7 @@ function CourseCard() {
           p: 3,
           display: "flex",
           flexDirection: "column",
-          flexGrow: 1,
+          gap: 2,
         }}
       >
         <Typography
@@ -331,22 +373,38 @@ function CourseCard() {
           sx={{
             color: "#1A237E",
             fontWeight: 700,
-            mb: 1,
           }}
         >
           {title}
         </Typography>
-        <Typography
-          variant="body1"
+
+        <Box
           sx={{
-            color: "#546E7A",
-            mb: 3,
-            lineHeight: 1.6,
-            flexGrow: 1,
+            backgroundColor: "rgba(26, 35, 126, 0.08)",
+            borderRadius: "12px",
+            p: 2,
+            border: "1px solid rgba(26, 35, 126, 0.12)",
           }}
         >
-          Price: <b>Rs {price}</b>
-        </Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: "#546E7A",
+              mb: 1,
+            }}
+          >
+            Course Price
+          </Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              color: "#1A237E",
+              fontWeight: 700,
+            }}
+          >
+            ₹{Number(price).toLocaleString("en-IN")}
+          </Typography>
+        </Box>
       </Box>
     </Card>
   );

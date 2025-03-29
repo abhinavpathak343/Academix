@@ -32,6 +32,8 @@ function AddCourse() {
 
   const handleSubmit = async () => {
     try {
+
+      
       await axios.post(
         `${BASE_URL}/admin/courses`,
         {
@@ -40,6 +42,8 @@ function AddCourse() {
           imageLink: image,
           published: true,
           price,
+          admin: localStorage.getItem("token"),
+          
         },
         {
           headers: {

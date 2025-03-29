@@ -216,4 +216,25 @@ router.post('/signup', async (req, res) => {
   });
 });
 
+router.delete('/course/:courseId', authenticateJwt, async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const course = await Course.findByIdAndDelete(courseId);
+
+    if (!course) {
+      return res.status(404).json({
+        message: 'Course not found'
+      });
+    }
+
+    res.json({
+      message: 'Course deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error deleting course'
+    });
+  }
+});
+
 export default router;
