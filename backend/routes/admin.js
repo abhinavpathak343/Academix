@@ -120,13 +120,25 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Update the course creation route to include admin username
 router.post('/courses', authenticateJwt, async (req, res) => {
-  const course = new Course(req.body);
-  await course.save();
-  res.json({
-    message: 'Course created successfully',
-    courseId: course.id
-  });
+  try {
+    const course = new Course({
+      ...req.body,
+      admin: req.user.username // Add admin username to course
+    });
+    await course.save();
+    res.status(201).json({
+      message: 'Course created successfully',
+      courseId: course.id
+    });
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({ 
+      message: 'Error creating course',
+      error: error.message 
+    });
+  }
 });
 
 router.put('/courses/:courseId', authenticateJwt, async (req, res) => {
@@ -144,19 +156,14 @@ router.put('/courses/:courseId', authenticateJwt, async (req, res) => {
   }
 });
 
-router.get('/courses', async (req, res) => {
+// Update the GET courses route to filter by admin username
+router.get('/courses', authenticateJwt, async (req, res) => {
   try {
-    const courses = await Course.find({
-      published: true
-    });
-    res.json({
-      courses
-    });
+    const courses = await Course.find({ admin: req.user.username });
+    res.json({ courses });
   } catch (error) {
     console.error('Error fetching courses:', error);
-    res.status(500).json({
-      message: 'Error fetching courses'
-    });
+    res.status(500).json({ message: 'Error fetching courses' });
   }
 });
 

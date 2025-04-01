@@ -11,6 +11,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import EditIcon from "@mui/icons-material/Edit";
@@ -23,23 +24,78 @@ import axios from "axios";
 
 function Courses() {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleCourseDelete = (deletedCourseId) => {
     setCourses(courses.filter((course) => course._id !== deletedCourseId));
   };
 
   const init = async () => {
-    const response = await axios.get(`${BASE_URL}/admin/courses/`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    setCourses(response.data.courses);
+    try {
+      setLoading(true);
+      const response = await axios.get(`${BASE_URL}/admin/courses`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setCourses(response.data.courses);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setError(error.response?.data?.message || "Failed to load courses");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     init();
   }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress sx={{ color: "#1A237E" }} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <Typography variant="h6" sx={{ color: "#d32f2f" }}>
+          {error}
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={init}
+          sx={{
+            backgroundColor: "#1A237E",
+            "&:hover": { backgroundColor: "#0D47A1" },
+          }}
+        >
+          Try Again
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ backgroundColor: "#FFFFFF", minHeight: "100vh", py: 8 }}>
