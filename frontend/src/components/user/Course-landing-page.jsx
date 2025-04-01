@@ -152,7 +152,7 @@ const CourseLandingPage = () => {
                       },
                       transition: "all 0.3s ease",
                     }}
-                    onClick={() => navigate("/courses")}
+                    onClick={() => navigate("/explore-courses")}
                   >
                     Explore Courses
                   </Button>
@@ -599,7 +599,7 @@ const CourseLandingPage = () => {
                         },
                         transition: "all 0.3s ease",
                       }}
-                      onClick={() => navigate("/instructor/signup")}
+                      onClick={() => navigate("/adminsignup")}
                     >
                       Become an Instructor
                     </Button>
@@ -623,7 +623,7 @@ const CourseLandingPage = () => {
                         },
                         transition: "all 0.3s ease",
                       }}
-                      onClick={() => navigate("/instructor/signin")}
+                      onClick={() => navigate("/adminsignin")}
                     >
                       Already an Instructor?
                     </Button>

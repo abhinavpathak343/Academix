@@ -7,6 +7,9 @@ export const userState = atom({
   default: {
     isLoading: true, // Shows loading until we fetch user info
     userEmail: null, // Stores the email if logged in
-    token: localStorage.getItem("token") || null, // Check localStorage initially
+    token: localStorage.getItem("token") || null,
+    isAdmin: false// Check localStorage initially
   },
 });
+
+

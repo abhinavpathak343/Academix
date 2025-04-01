@@ -28,70 +28,116 @@ app.use('/user', userRouter);
 import adminRouter from './admin.js';
 app.use('/admin', adminRouter);
 
+// User Signup Route
 router.post('/signup', async (req, res) => {
   const {
     username,
     password
   } = req.body;
-  const user = await User.findOne({
-    username
-  });
 
-  if (user) {
-    return res.status(400).json({
-      message: "User already exists"
+  try {
+    const user = await User.findOne({
+      username
+    });
+
+    if (user) {
+      return res.status(400).json({
+        message: "User already exists"
+      });
+    }
+
+    const newUser = new User({
+      username,
+      password
+    });
+    await newUser.save();
+
+    const token = jwt.sign({
+        id: newUser._id,
+        username: newUser.username,
+        isAdmin: false
+      }, // Include isAdmin: false
+      SECRET, {
+        expiresIn: '24h'
+      }
+    );
+
+    res.json({
+      token,
+      user: {
+        username: newUser.username,
+        id: newUser._id,
+        isAdmin: false // Include isAdmin in the response
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error signing up',
+      error: error.message
     });
   }
-
-  const newUser = new User({
-    username,
-    password
-  });
-  await newUser.save();
-
-  const token = jwt.sign({
-    id: newUser._id,
-    username: newUser.username
-  }, SECRET, {
-    expiresIn: '24h'
-  });
-
-  res.json({
-    token,
-    user: {
-      username: newUser.username,
-      id: newUser._id
-    }
-  });
 });
 
+// User Login Route
 router.post('/login', async (req, res) => {
   const {
     username,
     password
-  } = req.headers;
-  const user = await User.findOne({
-    username,
-    password
-  });
-  if (user) {
-    const token = jwt.sign({
+  } = req.body; // Change req.headers to req.body for consistency
+
+  try {
+    const user = await User.findOne({
       username,
-      role: 'user'
-    }, SECRET, {
-      expiresIn: '1h'
+      password
     });
+
+    if (!user) {
+      return res.status(403).json({
+        message: 'Invalid username or password'
+      });
+    }
+
+    const token = jwt.sign({
+        id: user._id,
+        username: user.username,
+        role: 'user',
+        isAdmin: false
+      }, // Include isAdmin: false
+      SECRET, {
+        expiresIn: '24h'
+      }
+    );
+
     res.json({
       message: 'Logged in successfully',
-      token
+      token,
+      isAdmin: false // Include isAdmin in the response
     });
-  } else {
-    res.status(403).json({
-      message: 'Invalid username or password'
+
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error logging in',
+      error: error.message
     });
   }
 });
 
+router.get('/courses', async (req, res) => {
+  try {
+    const courses = await Course.find({
+      published: true
+    });
+    res.json({
+      courses
+    });
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    res.status(500).json({
+      message: 'Error fetching courses'
+    });
+  }
+});
 // Start the server
 
 

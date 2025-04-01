@@ -15,8 +15,8 @@ import { useState } from "react";
 
 function Appbar() {
   const navigate = useNavigate();
-  const user = useRecoilValue(userState); // Get user state from Recoil
-  const setUser = useSetRecoilState(userState); // Function to update state
+  const user = useRecoilValue(userState);
+  const setUser = useSetRecoilState(userState);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -31,8 +31,8 @@ function Appbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser({ isLoading: false, userEmail: null, token: null }); // Reset user state
-    navigate("/signin");
+    setUser({ isLoading: false, userEmail: null, token: null, isAdmin: false }); // ✅ Reset user state
+    navigate(user.isAdmin ? "/adminsignin" : "/usersignin"); // ✅ Corrected route for user sign-in
   };
 
   return (
@@ -42,6 +42,7 @@ function Appbar() {
       sx={{ background: "#FFFFFF", borderBottom: "1px solid #E0E0E0" }}
     >
       <Toolbar>
+        {/* Dynamic Navigation for Home */}
         <Typography
           variant="h6"
           sx={{
@@ -51,7 +52,7 @@ function Appbar() {
             fontSize: "1.5rem",
             cursor: "pointer",
           }}
-          onClick={() => navigate("/")}
+          onClick={() => navigate(user.isAdmin ? "/adminhome" : "/userhome")} // ✅ Dynamic navigation
         >
           Academix
         </Typography>
@@ -69,28 +70,27 @@ function Appbar() {
               open={isMenuOpen}
               onClose={handleMenuClose}
             >
-              
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </>
         ) : (
           <div style={{ display: "flex", gap: "16px" }}>
+            {/* Dynamic Navigation for Sign In/Sign Up */}
             <Button
               variant="outlined"
-              onClick={() => navigate("/signin")}
-              sx={{
-                color: "#1A237E",
-                borderColor: "#1A237E",
-              }}
+              onClick={() =>
+                navigate(user.isAdmin ? "/adminsignin" : "/usersignin")
+              } // ✅ Corrected
+              sx={{ color: "#1A237E", borderColor: "#1A237E" }}
             >
               Sign In
             </Button>
             <Button
               variant="contained"
-              onClick={() => navigate("/signup")}
-              sx={{
-                background: "#1A237E",
-              }}
+              onClick={() =>
+                navigate(user.isAdmin ? "/adminsignup" : "/usersignup")
+              } // ✅ Corrected
+              sx={{ background: "#1A237E" }}
             >
               Sign Up
             </Button>
