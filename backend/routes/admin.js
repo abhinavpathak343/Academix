@@ -121,12 +121,30 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/courses', authenticateJwt, async (req, res) => {
-  const course = new Course(req.body);
-  await course.save();
-  res.json({
-    message: 'Course created successfully',
-    courseId: course.id
-  });
+  try {
+    const { title, description, imageLink, price, published } = req.body;
+    
+    const course = new Course({
+      title,
+      description,
+      imageLink,
+      price: Number(price),
+      published: published || true,
+      admin: req.user.username // Using username from JWT token
+    });
+
+    const savedCourse = await course.save();
+    res.status(201).json({
+      message: 'Course created successfully',
+      courseId: savedCourse.id
+    });
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({
+      message: 'Error creating course',
+      error: error.message
+    });
+  }
 });
 
 router.put('/courses/:courseId', authenticateJwt, async (req, res) => {

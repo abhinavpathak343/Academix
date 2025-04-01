@@ -32,31 +32,48 @@ function AddCourse() {
 
   const handleSubmit = async () => {
     try {
+      // Input validation
+      if (!title || !description || !image || !price) {
+        alert("Please fill in all fields");
+        return;
+      }
 
-      
-      await axios.post(
+      const response = await axios.post(
         `${BASE_URL}/admin/courses`,
         {
           title,
           description,
           imageLink: image,
           published: true,
-          price,
-          admin: localStorage.getItem("token"),
-          
+          price: Number(price),
+          // Remove admin field from request body
         },
         {
           headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      setOpen(true);
-      setTimeout(() => {
-        navigate("/courses");
-      }, 2000);
+
+      if (response.status === 201) {
+        setOpen(true);
+        // Reset form
+        setTitle("");
+        setDescription("");
+        setImage("");
+        setPrice(0);
+
+        setTimeout(() => {
+          navigate("/courses");
+        }, 2000);
+      }
     } catch (error) {
-      alert("Failed to add course. Please try again.");
+      console.error("Error creating course:", error);
+      alert(
+        error.response?.data?.message ||
+          "Failed to add course. Please try again."
+      );
     }
   };
 

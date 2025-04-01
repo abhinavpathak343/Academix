@@ -23,16 +23,32 @@ const connectDB = async () => {
 
 // Schemas
 const courseSchema = new mongoose.Schema({
-  title: String,
-  
-  description: String,
-  price: Number,
-  imageLink: String,
-  published: Boolean,
-     admin: {
-       type: mongoose.Schema.Types.ObjectId,
-       ref: 'Admin' // Reference to the Admin model
-     }
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  imageLink: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  published: {
+    type: Boolean,
+    default: true
+  },
+  admin: {
+    type: String, // Changed from ObjectId to String to store username
+    required: true
+  }
+}, {
+  timestamps: true
 });
 
 const adminSchema = new mongoose.Schema({

@@ -61,34 +61,33 @@ function UserSignin() {
     },
   });
 
-const handleSignin = async () => {
-  setLoading(true);
-  try {
-    const response = await axios.post(`${BASE_URL}/user/login`, {
-      username,
-      password,
-    });
-
-    if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
-      setUser({
-        isLoading: false,
-        token: response.data.token,
-        isAdmin: false,
-        userEmail: username, // Change this to store username for avatar display
+  const handleSignin = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BASE_URL}/user/login`, {
+        username,
+        password,
       });
-      navigate("/userhome");
-    }
-  } catch (error) {
-    console.error(
-      "Signin error:",
-      error.response ? error.response.data : error.message
-    );
-  } finally {
-    setLoading(false);
-  }
-};
 
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        setUser({
+          isLoading: false,
+          token: response.data.token,
+          isAdmin: false,
+          userEmail: username, // Change this to store username for avatar display
+        });
+        navigate("/userhome");
+      }
+    } catch (error) {
+      console.error(
+        "Signin error:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box sx={{ backgroundColor: "#FFFFFF", minHeight: "100vh" }}>
