@@ -156,7 +156,7 @@ const CourseLandingPage = () => {
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <AccessTimeIcon sx={{ fontSize: 20, color: "#1A237E" }} />
                     <Typography variant="body2" color="#546E7A">
-                      {course.duration || "8 weeks"}  
+                      {course.duration || "8 weeks"}
                     </Typography>
                   </Box>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -361,7 +361,7 @@ const CourseLandingPage = () => {
           py: 12,
           position: "relative",
           overflow: "hidden",
-          mb: 6
+          mb: 6,
         }}
       >
         <Container maxWidth="lg">
@@ -464,7 +464,7 @@ const CourseLandingPage = () => {
                     </Grid>
                   ))}
                 </Grid>
-                <Box sx={{ mt: 6, display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
                   <Button
                     variant="contained"
                     size="large"
