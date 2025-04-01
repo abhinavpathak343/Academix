@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "../../config.js";
 import {
   Box,
   Container,
@@ -8,6 +10,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -23,42 +26,159 @@ import LiveTvIcon from "@mui/icons-material/LiveTv";
 
 const CourseLandingPage = () => {
   const navigate = useNavigate();
+  const [featuredCourses, setFeaturedCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const featuredCourses = [
-    {
-      id: 1,
-      title: "Complete Web Development Bootcamp",
-      description: "Learn full-stack web development from scratch",
-      image:
-        "https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=2831&auto=format&fit=crop",
-      duration: "12 weeks",
-      rating: 4.8,
-      students: 1200,
-      price: 499,
-    },
-    {
-      id: 2,
-      title: "Advanced Machine Learning",
-      description: "Master ML algorithms and deep learning",
-      image:
-        "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=2940&auto=format&fit=crop",
-      duration: "10 weeks",
-      rating: 4.9,
-      students: 800,
-      price: 599,
-    },
-    {
-      id: 3,
-      title: "Mobile App Development",
-      description: "Build iOS and Android apps with React Native",
-      image:
-        "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=2940&auto=format&fit=crop",
-      duration: "8 weeks",
-      rating: 4.7,
-      students: 950,
-      price: 449,
-    },
-  ];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/user/courses`);
+        // Get only first 3 courses for featured section
+        setFeaturedCourses(response.data.courses.slice(0, 3));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setError("Failed to load courses");
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  // Replace the hardcoded featuredCourses array with the loading and error states
+  const renderFeaturedCourses = () => {
+    if (loading) {
+      return (
+        <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+          <CircularProgress sx={{ color: "#1A237E" }} />
+        </Box>
+      );
+    }
+
+    if (error) {
+      return (
+        <Typography
+          variant="h6"
+          sx={{ textAlign: "center", color: "#d32f2f", py: 8 }}
+        >
+          {error}
+        </Typography>
+      );
+    }
+
+    return (
+      <Grid container spacing={4} sx={{ mt: 4 }}>
+        {featuredCourses.map((course) => (
+          <Grid item xs={12} md={4} key={course._id}>
+            <Card
+              component={motion.div}
+              whileHover={{ y: -10 }}
+              sx={{
+                backgroundColor: "#FFFFFF",
+                height: "100%",
+                borderRadius: "16px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+                overflow: "hidden",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+                },
+              }}
+              onClick={() => navigate("/signin")}
+            >
+              <CardMedia
+                component="img"
+                height="200"
+                image={course.imageLink || "fallback-image-url"}
+                alt={course.title}
+                sx={{
+                  objectFit: "cover",
+                  transition: "transform 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              />
+              <CardContent sx={{ p: 3 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 1,
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{
+                      color: "#1A237E",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {course.title}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: "#1A237E",
+                      fontWeight: 700,
+                      backgroundColor: "rgba(26, 35, 126, 0.05)",
+                      padding: "4px 12px",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    ₹{course.price}
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#546E7A",
+                    mb: 3,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {course.description}
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    pt: 2,
+                    borderTop: "1px solid #E0E0E0",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <AccessTimeIcon sx={{ fontSize: 20, color: "#1A237E" }} />
+                    <Typography variant="body2" color="#546E7A">
+                      {course.duration || "8 weeks"}  
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <StarIcon sx={{ color: "#FFC107" }} />
+                    <Typography variant="body2" color="#546E7A">
+                      {course.rating || "4.5"}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <SchoolIcon sx={{ color: "#1A237E" }} />
+                    <Typography variant="body2" color="#546E7A">
+                      {course.students || "500+"}
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <Box sx={{ backgroundColor: "#FFFFFF", minHeight: "100vh" }}>
@@ -218,7 +338,7 @@ const CourseLandingPage = () => {
         </Container>
       </Box>
 
-      {/* Featured Courses */}
+      {/* Featured Courses Section */}
       <Container maxWidth="lg" sx={{ py: 8 }}>
         <Typography
           variant="h3"
@@ -232,114 +352,7 @@ const CourseLandingPage = () => {
         >
           Featured Courses
         </Typography>
-        <Grid container spacing={4} sx={{ mt: 4 }}>
-          {featuredCourses.map((course) => (
-            <Grid item xs={12} md={4} key={course.id}>
-              <Card
-                component={motion.div}
-                whileHover={{ y: -10 }}
-                sx={{
-                  backgroundColor: "#FFFFFF",
-                  height: "100%",
-                  borderRadius: "16px",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
-                  overflow: "hidden",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                  "&:hover": {
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-                  },
-                }}
-                onClick={() => navigate("/signin")}
-              >
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={course.image}
-                  alt={course.title}
-                  sx={{
-                    objectFit: "cover",
-                    transition: "transform 0.3s ease",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                />
-                <CardContent sx={{ p: 3 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      mb: 1,
-                    }}
-                  >
-                    <Typography
-                      variant="h5"
-                      component="div"
-                      sx={{
-                        color: "#1A237E",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {course.title}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        color: "#1A237E",
-                        fontWeight: 700,
-                        backgroundColor: "rgba(26, 35, 126, 0.05)",
-                        padding: "4px 12px",
-                        borderRadius: "12px",
-                      }}
-                    >
-                      ${course.price}
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#546E7A",
-                      mb: 3,
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {course.description}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      pt: 2,
-                      borderTop: "1px solid #E0E0E0",
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <AccessTimeIcon sx={{ fontSize: 20, color: "#1A237E" }} />
-                      <Typography variant="body2" color="#546E7A">
-                        {course.duration}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <StarIcon sx={{ color: "#FFC107" }} />
-                      <Typography variant="body2" color="#546E7A">
-                        {course.rating}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <SchoolIcon sx={{ color: "#1A237E" }} />
-                      <Typography variant="body2" color="#546E7A">
-                        {course.students}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        {renderFeaturedCourses()}
       </Container>
 
       <Box
