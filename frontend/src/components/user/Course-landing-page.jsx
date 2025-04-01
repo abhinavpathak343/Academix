@@ -361,21 +361,11 @@ const CourseLandingPage = () => {
           py: 12,
           position: "relative",
           overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background:
-              "radial-gradient(circle at top right, rgba(26, 35, 126, 0.05) 0%, transparent 70%)",
-            zIndex: 0,
-          },
+          mb: 6
         }}
       >
         <Container maxWidth="lg">
-          <Grid container spacing={6} alignItems="center">
+          <Grid container spacing={8} alignItems="center">
             <Grid item xs={12} md={6}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -474,29 +464,30 @@ const CourseLandingPage = () => {
                     </Grid>
                   ))}
                 </Grid>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    mt: 6,
-                    backgroundColor: "#1A237E",
-                    px: 4,
-                    py: 2,
-                    borderRadius: "12px",
-                    textTransform: "none",
-                    fontSize: "1.1rem",
-                    boxShadow: "0 8px 16px rgba(26, 35, 126, 0.2)",
-                    "&:hover": {
-                      backgroundColor: "#0D47A1",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 12px 20px rgba(26, 35, 126, 0.3)",
-                    },
-                    transition: "all 0.3s ease",
-                  }}
-                  onClick={() => navigate("/live-classes")}
-                >
-                  Join Live Classes
-                </Button>
+                <Box sx={{ mt: 6, display: 'flex', justifyContent: 'center' }}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{
+                      backgroundColor: "#1A237E",
+                      px: 4,
+                      py: 2,
+                      borderRadius: "12px",
+                      textTransform: "none",
+                      fontSize: "1.1rem",
+                      boxShadow: "0 8px 16px rgba(26, 35, 126, 0.2)",
+                      "&:hover": {
+                        backgroundColor: "#0D47A1",
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 12px 20px rgba(26, 35, 126, 0.3)",
+                      },
+                      transition: "all 0.3s ease",
+                    }}
+                    onClick={() => navigate("/live-classes")}
+                  >
+                    Join Live Classes
+                  </Button>
+                </Box>
               </motion.div>
             </Grid>
             <Grid item xs={12} md={6}>
