@@ -123,13 +123,15 @@ function UserSignup() {
               <SchoolIcon sx={{ fontSize: 40, color: "#1A237E" }} />
               <Typography
                 variant="h4"
-                sx={{ color: "#1A237E", fontWeight: 700 }}
+                sx={{
+                  color: "#1A237E",
+                  fontWeight: 700,
+                }}
               >
                 Join Academix
               </Typography>
             </Box>
 
-            {/* Email Field */}
             <TextField
               fullWidth
               label="Email"
@@ -148,17 +150,31 @@ function UserSignup() {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
                   backgroundColor: "#FFFFFF",
+                  transition: "all 0.3s ease-in-out",
                   "& input": { color: "#1A237E" },
-                  "&:hover fieldset": { borderColor: "#90CAF9" },
+                  "&:hover fieldset": {
+                    borderColor: "#90CAF9",
+                  },
                   "&.Mui-focused fieldset": {
                     borderColor: "#1A237E",
                     borderWidth: "2px",
                   },
                 },
+                "& .MuiInputLabel-root": {
+                  color: "#546E7A",
+                  backgroundColor: "#FFFFFF",
+                  padding: "0 8px",
+                  "&.Mui-focused": {
+                    color: "#1A237E",
+                  },
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#E3F2FD",
+                  borderWidth: "2px",
+                },
               }}
             />
 
-            {/* Password Field */}
             <TextField
               fullWidth
               label="Password"
@@ -177,7 +193,12 @@ function UserSignup() {
                       aria-label="toggle password visibility"
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
-                      sx={{ color: "#1A237E" }}
+                      sx={{
+                        color: "#1A237E",
+                        "&:hover": {
+                          backgroundColor: "rgba(26, 35, 126, 0.04)",
+                        },
+                      }}
                     >
                       {showPassword ? (
                         <VisibilityOffIcon />
@@ -187,29 +208,58 @@ function UserSignup() {
                     </IconButton>
                   </InputAdornment>
                 ),
+                style: { color: "#1A237E" },
               }}
               sx={{
                 mb: 4,
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
                   backgroundColor: "#FFFFFF",
+                  transition: "all 0.3s ease-in-out",
                   "& input": { color: "#1A237E" },
-                  "&:hover fieldset": { borderColor: "#90CAF9" },
+                  "&:hover fieldset": {
+                    borderColor: "#90CAF9",
+                  },
                   "&.Mui-focused fieldset": {
                     borderColor: "#1A237E",
                     borderWidth: "2px",
                   },
                 },
+                "& .MuiInputLabel-root": {
+                  color: "#546E7A",
+                  backgroundColor: "#FFFFFF",
+                  padding: "0 8px",
+                  "&.Mui-focused": {
+                    color: "#1A237E",
+                  },
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#E3F2FD",
+                  borderWidth: "2px",
+                },
               }}
             />
 
-            {/* Signup Button */}
             <Button
               fullWidth
               size="large"
               variant="contained"
-              onClick={handleSignup} // ✅ Uses extracted function
-              sx={{ mb: 2, background: "#1A237E" }}
+              onClick={handleSignup}
+              sx={{
+                backgroundColor: "#1A237E",
+                borderRadius: "12px",
+                py: 1.5,
+                textTransform: "none",
+                fontSize: "1.1rem",
+                boxShadow: "0 8px 16px rgba(26, 35, 126, 0.2)",
+                "&:hover": {
+                  backgroundColor: "#0D47A1",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 20px rgba(26, 35, 126, 0.3)",
+                },
+                transition: "all 0.3s ease",
+                mb: 2,
+              }}
             >
               Create Account
             </Button>
@@ -220,7 +270,6 @@ function UserSignup() {
               </Typography>
             </Divider>
 
-            {/* Google Signup */}
             <Button
               fullWidth
               size="large"
@@ -230,22 +279,55 @@ function UserSignup() {
                 borderColor: "#1A237E",
                 color: "#1A237E",
                 borderRadius: "12px",
+                py: 1.5,
                 textTransform: "none",
-                "&:hover": { backgroundColor: "rgba(26, 35, 126, 0.1)" },
+                fontSize: "1.1rem",
+                "&:hover": {
+                  borderColor: "#0D47A1",
+                  backgroundColor: "rgba(26, 35, 126, 0.04)",
+                  transform: "translateY(-2px)",
+                },
+                transition: "all 0.3s ease",
               }}
+              startIcon={
+                <img
+                  src="https://www.google.com/favicon.ico"
+                  alt="Google"
+                  style={{ width: 20, height: 20 }}
+                />
+              }
             >
               Sign up with Google
             </Button>
 
-            {/* Link to Login */}
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-              <Typography variant="body2">Already have an account?</Typography>
+            <Box
+              sx={{
+                mt: 3,
+                pt: 3,
+                borderTop: "1px solid #E0E0E0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+              }}
+            >
+              <Typography variant="body2" sx={{ color: "#546E7A" }}>
+                Already have an account?
+              </Typography>
               <Button
                 component={Link}
                 to="/signin"
-                sx={{ color: "#1A237E", fontWeight: 600 }}
+                sx={{
+                  color: "#1A237E",
+                  textTransform: "none",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  "&:hover": {
+                    backgroundColor: "rgba(26, 35, 126, 0.04)",
+                  },
+                }}
               >
-                Login
+                Sign in
               </Button>
             </Box>
           </Card>
