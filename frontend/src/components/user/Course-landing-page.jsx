@@ -23,8 +23,11 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import PeopleIcon from "@mui/icons-material/People";
 import ChatIcon from "@mui/icons-material/Chat";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
+import { userState } from "../../store/atoms/user.js";
+import { useRecoilValue } from "recoil";
 
 const CourseLandingPage = () => {
+  const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const [featuredCourses, setFeaturedCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -87,7 +90,14 @@ const CourseLandingPage = () => {
                   boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
                 },
               }}
-              onClick={() => navigate("/signin")}
+              // In CourseLandingPage.jsx, update the Card onClick handler
+              onClick={() => {
+                if (!user.isAdmin) {
+                  navigate(`/user/course/${course._id}`);
+                } else {
+                  navigate("/usersignin");
+                }
+              }}
             >
               <CardMedia
                 component="img"

@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google"; // Import the provider
 import { ThemeProvider, createTheme } from "@mui/material";
 import ExploreCoursesPage from "./components/user/ExploreCoursesPage";
+import CourseDescription from "./components/user/Coursedescription";
 export { InitUser }; // Export InitUser as a named export
 
 // Create a dark theme
@@ -70,8 +71,11 @@ function App() {
                   path={"/explore-courses"}
                   element={<ExploreCoursesPage />}
                 />
-                {/* You might want to add a default route */}
                 <Route path={"/"} element={<CourseLandingPage />} />
+                <Route
+                  path="user/course/:courseId"
+                  element={<CourseDescription />}
+                />
               </Routes>
             </Router>
           </div>
@@ -83,21 +87,17 @@ function App() {
 
 function InitUser() {
   const setUser = useSetRecoilState(userState); // Function to update Recoil state
-
   useEffect(() => {
     const init = async () => {
       try {
         const token = localStorage.getItem("token");
-
         if (!token) {
           setUser({ isLoading: false, userEmail: null, token: null });
           return;
         }
-
         const response = await axios.get(`${BASE_URL}/admin/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (response.data.username) {
           setUser({
             isLoading: false,
@@ -111,10 +111,8 @@ function InitUser() {
         setUser({ isLoading: false, userEmail: null, token: null });
       }
     };
-
     init();
   }, []);
-
   return null;
 }
 
