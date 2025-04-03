@@ -143,12 +143,18 @@ router.get('/course/:courseId', async (req, res) => {
   try {
     const course = await Course.findById(req.params.courseId);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({
+        message: 'Course not found'
+      });
     }
-    res.json({ course });
+    res.json({
+      course
+    });
   } catch (error) {
     console.error('Error fetching course:', error);
-    res.status(500).json({ message: 'Error fetching course details' });
+    res.status(500).json({
+      message: 'Error fetching course details'
+    });
   }
 });
 

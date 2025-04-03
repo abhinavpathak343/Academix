@@ -76,7 +76,10 @@ function App() {
                   path="user/course/:courseId"
                   element={<CourseDescription />}
                 />
-                <Route path="/user/course/:courseId" element={<CourseDescription />} />
+                <Route
+                  path="/user/course/:courseId"
+                  element={<CourseDescription />}
+                />
               </Routes>
             </Router>
           </div>

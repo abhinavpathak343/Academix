@@ -84,7 +84,9 @@ function CourseDescription() {
 
   return (
     <Box sx={{ backgroundColor: "#F6F9FC", minHeight: "100vh" }}>
-      <Container maxWidth="md" sx={{ py: 8 }}> {/* Changed from lg to md */}
+      <Container maxWidth="md" sx={{ py: 8 }}>
+        {" "}
+        {/* Changed from lg to md */}
         <Card
           component={motion.div}
           initial={{ opacity: 0, y: 20 }}
@@ -100,7 +102,9 @@ function CourseDescription() {
           <Grid container>
             {/* Course Image */}
             <Grid item xs={12}>
-              <Box sx={{ position: "relative", paddingTop: "45%" }}> {/* Reduced height */}
+              <Box sx={{ position: "relative", paddingTop: "45%" }}>
+                {" "}
+                {/* Reduced height */}
                 <Box
                   component="img"
                   src={course?.imageLink || "fallback-image-url"}
@@ -120,11 +124,17 @@ function CourseDescription() {
             {/* Course Details */}
             <Grid item xs={12}>
               <Box sx={{ p: 4 }}>
-                <Typography variant="h4" sx={{ color: "#1A237E", fontWeight: 700, mb: 2 }}>
+                <Typography
+                  variant="h4"
+                  sx={{ color: "#1A237E", fontWeight: 700, mb: 2 }}
+                >
                   {course?.title}
                 </Typography>
 
-                <Typography variant="body1" sx={{ color: "#546E7A", lineHeight: 1.8, mb: 3 }}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "#546E7A", lineHeight: 1.8, mb: 3 }}
+                >
                   {course?.description}
                 </Typography>
 
@@ -155,8 +165,18 @@ function CourseDescription() {
                   </Grid>
                 </Grid>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 3 }}>
-                  <Typography variant="h5" sx={{ color: "#1A237E", fontWeight: 700 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mt: 3,
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    sx={{ color: "#1A237E", fontWeight: 700 }}
+                  >
                     ₹{course?.price}
                   </Typography>
                   <Button
