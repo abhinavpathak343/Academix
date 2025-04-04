@@ -9,7 +9,7 @@ import Course from "./components/admin/Course";
 import { Landing } from "./components/admin/Landing.jsx";
 import Appbar from "./components/admin/Appbar.jsx";
 import { userState } from "./store/atoms/user.js";
-import CourseLandingPage from "./components/user/Course-landing-page.jsx";
+import CourseLandingPage from "./components/user/course-landing-page.jsx";
 import { RecoilRoot, useSetRecoilState } from "recoil";
 import axios from "axios";
 import { BASE_URL } from "./config.js";
@@ -55,8 +55,8 @@ function App() {
             }}
           >
             <Router>
+              <InitUser /> {/* Add this line before Appbar */}
               <Appbar /> {/* Appbar rendered once at the app level */}
-              <InitUser />
               <Routes>
                 <Route path={"/addcourse"} element={<AddCourse />} />
                 <Route path={"/course/:courseId"} element={<Course />} />
@@ -67,6 +67,7 @@ function App() {
                 <Route path={"/usersignup"} element={<UserSignup />} />
                 <Route path={"/adminhome"} element={<Landing />} />
                 <Route path={"/userhome"} element={<CourseLandingPage />} />
+                <Route path={"/Liveclass"} element={<LiveClass />} />
                 <Route
                   path={"/explore-courses"}
                   element={<ExploreCoursesPage />}
@@ -87,37 +88,6 @@ function App() {
       </RecoilRoot>
     </GoogleOAuthProvider>
   );
-}
-
-function InitUser() {
-  const setUser = useSetRecoilState(userState); // Function to update Recoil state
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setUser({ isLoading: false, userEmail: null, token: null });
-          return;
-        }
-        const response = await axios.get(`${BASE_URL}/admin/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (response.data.username) {
-          setUser({
-            isLoading: false,
-            userEmail: response.data.username,
-            token,
-          });
-        } else {
-          setUser({ isLoading: false, userEmail: null, token: null });
-        }
-      } catch (error) {
-        setUser({ isLoading: false, userEmail: null, token: null });
-      }
-    };
-    init();
-  }, []);
-  return null;
 }
 
 export default App;

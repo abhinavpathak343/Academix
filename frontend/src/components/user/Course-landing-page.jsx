@@ -308,7 +308,7 @@ const CourseLandingPage = () => {
                       },
                       transition: "all 0.3s ease",
                     }}
-                    onClick={() => navigate("/live-classes")}
+                    onClick={() => navigate("/Liveclass")}
                   >
                     Live Classes
                   </Button>
@@ -493,7 +493,7 @@ const CourseLandingPage = () => {
                       },
                       transition: "all 0.3s ease",
                     }}
-                    onClick={() => navigate("/live-classes")}
+                    onClick={() => navigate("/Liveclass")}
                   >
                     Join Live Classes
                   </Button>
