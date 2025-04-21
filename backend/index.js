@@ -22,14 +22,22 @@ connectDB();
 
 const app = express();
 const server = createServer(app); // Create HTTP server
+
+// Configure CORS for Express
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 const io = new Server(server, { // Initialize Socket.IO with HTTP server
   cors: {
-    origin: "http://localhost:5173", // Add your frontend URL
-    methods: ["GET", "POST"]
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
-app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use('/admin', adminRouter);
@@ -94,11 +102,107 @@ app.post('/google-auth', async (req, res) => {
   }
 });
 
-io.on('connection', (socket) => {
-  console.log('A user connected');
+io.on("connection", (socket) => {
+  console.log(`Socket Connected`, socket.id);
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
+  socket.on("room:join", (data) => {
+    const {
+      email,
+      room
+    } = data;
+    console.log(`User ${email} joining room ${room}`);
+
+    // Join the socket room
+    socket.join(room);
+
+    // Notify others in the room
+    socket.to(room).emit("user:joined", {
+      email,
+      id: socket.id
+    });
+
+    // Confirm to the joining user
+    io.to(socket.id).emit("room:join", data);
+  });
+
+  socket.on("user:introduction", ({
+    to,
+    email
+  }) => {
+    io.to(to).emit("user:introduction", {
+      from: socket.id,
+      email
+    });
+  });
+
+  socket.on('user:call', ({
+    to,
+    offer
+  }) => {
+    io.to(to).emit('incoming:call', {
+      from: socket.id,
+      offer
+    });
+  });
+
+  socket.on('call:accepted', ({
+    to,
+    ans
+  }) => {
+    io.to(to).emit('call:accepted', {
+      from: socket.id,
+      ans
+    });
+  });
+
+  socket.on('peer:nego:needed', ({
+    to,
+    offer
+  }) => {
+    io.to(to).emit('peer:nego:needed', {
+      from: socket.id,
+      offer
+    });
+  });
+
+  socket.on('peer:nego:done', ({
+    to,
+    ans
+  }) => {
+    io.to(to).emit('peer:nego:final', {
+      from: socket.id,
+      ans
+    });
+  });
+
+  socket.on('ice:candidate', ({
+    to,
+    candidate
+  }) => {
+    io.to(to).emit('ice:candidate', {
+      from: socket.id,
+      candidate
+    });
+  });
+
+  socket.on('call:end', ({
+    to
+  }) => {
+    io.to(to).emit('call:end', {
+      from: socket.id
+    });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+    // Notify all rooms this socket was in about the disconnection
+    socket.rooms.forEach(room => {
+      if (room !== socket.id) {
+        socket.to(room).emit('user:left', {
+          id: socket.id
+        });
+      }
+    });
   });
 });
 

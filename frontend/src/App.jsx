@@ -18,9 +18,11 @@ import { GoogleOAuthProvider } from "@react-oauth/google"; // Import the provide
 import { ThemeProvider, createTheme } from "@mui/material";
 import ExploreCoursesPage from "./components/user/ExploreCoursesPage";
 import CourseDescription from "./components/user/Coursedescription";
-export { InitUser }; // Export InitUser as a named export
-
+import LiveClass from "./components/user/LiveClass.jsx";
+import InitUser from "./components/InitUser";
 // Create a dark theme
+import Room from "./components/user/room.jsx";
+import { SocketProvider } from "./Providers/socket.jsx";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -43,50 +45,53 @@ const darkTheme = createTheme({
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="1004573158418-tuu4clins6au7dcblkbk9ke4ovplsrd3.apps.googleusercontent.com">
-      <RecoilRoot>
-        <ThemeProvider theme={darkTheme}>
-          <div
-            style={{
-              width: "100vw",
-              height: "100vh",
-              backgroundColor: "#121212",
-              color: "#ffffff",
-            }}
-          >
-            <Router>
-              <InitUser /> {/* Add this line before Appbar */}
-              <Appbar /> {/* Appbar rendered once at the app level */}
-              <Routes>
-                <Route path={"/addcourse"} element={<AddCourse />} />
-                <Route path={"/course/:courseId"} element={<Course />} />
-                <Route path={"/courses"} element={<Courses />} />
-                <Route path={"/adminsignin"} element={<AdminSignin />} />
-                <Route path={"/adminsignup"} element={<AdminSignup />} />
-                <Route path={"/usersignin"} element={<UserSignin />} />
-                <Route path={"/usersignup"} element={<UserSignup />} />
-                <Route path={"/adminhome"} element={<Landing />} />
-                <Route path={"/userhome"} element={<CourseLandingPage />} />
-                <Route path={"/Liveclass"} element={<LiveClass />} />
-                <Route
-                  path={"/explore-courses"}
-                  element={<ExploreCoursesPage />}
-                />
-                <Route path={"/"} element={<CourseLandingPage />} />
-                <Route
-                  path="user/course/:courseId"
-                  element={<CourseDescription />}
-                />
-                <Route
-                  path="/user/course/:courseId"
-                  element={<CourseDescription />}
-                />
-              </Routes>
-            </Router>
-          </div>
-        </ThemeProvider>
-      </RecoilRoot>
-    </GoogleOAuthProvider>
+    <SocketProvider>
+      <GoogleOAuthProvider clientId="1004573158418-tuu4clins6au7dcblkbk9ke4ovplsrd3.apps.googleusercontent.com">
+        <RecoilRoot>
+          <InitUser /> {/* Add this line before ThemeProvider */}
+          <ThemeProvider theme={darkTheme}>
+            <div
+              style={{
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: "#121212",
+                color: "#ffffff",
+              }}
+            >
+              <Router>
+                <Appbar /> {/* Appbar rendered once at the app level */}
+                <Routes>
+                  <Route path={"/addcourse"} element={<AddCourse />} />
+                  <Route path={"/course/:courseId"} element={<Course />} />
+                  <Route path={"/courses"} element={<Courses />} />
+                  <Route path={"/adminsignin"} element={<AdminSignin />} />
+                  <Route path={"/adminsignup"} element={<AdminSignup />} />
+                  <Route path={"/usersignin"} element={<UserSignin />} />
+                  <Route path={"/usersignup"} element={<UserSignup />} />
+                  <Route path={"/adminhome"} element={<Landing />} />
+                  <Route path={"/userhome"} element={<CourseLandingPage />} />
+                  <Route path={"/Liveclass"} element={<LiveClass />} />
+                  <Route path="/room/:roomCode" element={<Room />} />
+                  <Route
+                    path={"/explore-courses"}
+                    element={<ExploreCoursesPage />}
+                  />
+                  <Route path={"/"} element={<CourseLandingPage />} />
+                  <Route
+                    path="user/course/:courseId"
+                    element={<CourseDescription />}
+                  />
+                  <Route
+                    path="/user/course/:courseId"
+                    element={<CourseDescription />}
+                  />
+                </Routes>
+              </Router>
+            </div>
+          </ThemeProvider>
+        </RecoilRoot>
+      </GoogleOAuthProvider>
+    </SocketProvider>
   );
 }
 

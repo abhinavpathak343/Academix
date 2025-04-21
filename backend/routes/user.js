@@ -81,45 +81,27 @@ router.post('/signup', async (req, res) => {
 
 // User Login Route
 router.post('/login', async (req, res) => {
-  const {
-    username,
-    password
-  } = req.body; // Change req.headers to req.body for consistency
-
   try {
     const user = await User.findOne({
-      username,
-      password
+      username: req.body.username
     });
-
-    if (!user) {
-      return res.status(403).json({
-        message: 'Invalid username or password'
-      });
-    }
-
-    const token = jwt.sign({
-        id: user._id,
-        username: user.username,
+    if (user && user.password === req.body.password) {
+      const token = jwt.sign({
+        username: user.username, // Make sure this is included
+        email: user.email, // Include email if available
         role: 'user',
         isAdmin: false
-      }, // Include isAdmin: false
-      SECRET, {
-        expiresIn: '24h'
-      }
-    );
+      }, SECRET, {
+        expiresIn: '7d'
+      });
 
-    res.json({
-      message: 'Logged in successfully',
-      token,
-      isAdmin: false // Include isAdmin in the response
-    });
-
+      res.json({
+        message: 'Logged in successfully',
+        token
+      });
+    }
   } catch (error) {
-    res.status(500).json({
-      message: 'Error logging in',
-      error: error.message
-    });
+    // ...error handling
   }
 });
 
