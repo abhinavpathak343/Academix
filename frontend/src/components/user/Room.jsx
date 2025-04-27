@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSocket } from "../../Providers/socket";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import peerService from "../service/peer";
+import PeerService from "../service/peer";
 import { Box, Typography, Button, Paper, IconButton, Stack } from "@mui/material";
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -21,6 +21,7 @@ const Room = () => {
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const myEmail = location.state?.email || "You";
+  const [peerService] = useState(() => new PeerService());
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log(`Email ${email} joined room`);

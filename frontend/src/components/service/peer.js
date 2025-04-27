@@ -122,6 +122,4 @@ class PeerService {
     }
 }
 
-// Create a single instance
-const peerService = new PeerService();
-export default peerService;
+export default PeerService;
