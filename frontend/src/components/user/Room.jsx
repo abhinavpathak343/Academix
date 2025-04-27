@@ -86,7 +86,7 @@ const Room = () => {
   }, []);
 
   const handleIceCandidate = useCallback(({ from, candidate }) => {
-    peerService.peer.addIceCandidate(new RTCIceCandidate(candidate));
+    peerService.addIceCandidate(candidate);
   }, []);
 
   const toggleAudio = useCallback(() => {

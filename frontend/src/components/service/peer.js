@@ -31,8 +31,15 @@ class PeerService {
         };
     }
 
+    isPeerClosed() {
+        return (
+            this.peer.connectionState === "closed" ||
+            this.peer.signalingState === "closed"
+        );
+    }
+
     ensurePeerOpen() {
-        if (this.peer.connectionState === "closed" || this.peer.signalingState === "closed") {
+        if (this.isPeerClosed()) {
             this.createPeer();
         }
     }
@@ -85,6 +92,18 @@ class PeerService {
             });
         } catch (error) {
             console.error("Error adding stream:", error);
+        }
+    }
+
+    async addIceCandidate(candidate) {
+        if (this.isPeerClosed()) {
+            console.warn("Peer is closed, ignoring ICE candidate");
+            return;
+        }
+        try {
+            await this.peer.addIceCandidate(new RTCIceCandidate(candidate));
+        } catch (error) {
+            console.error("Error adding ICE candidate:", error);
         }
     }
 
