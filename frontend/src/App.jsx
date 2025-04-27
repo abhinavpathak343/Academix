@@ -9,7 +9,7 @@ import Course from "./components/admin/Course";
 import { Landing } from "./components/admin/Landing.jsx";
 import Appbar from "./components/admin/Appbar.jsx";
 import { userState } from "./store/atoms/user.js";
-import CourseLandingPage from "./components/user/course-landing-page.jsx";
+import CourseLandingPage from "./components/user/CourseLandingPage.jsx";
 import { RecoilRoot, useSetRecoilState } from "recoil";
 import axios from "axios";
 import { BASE_URL } from "./config.js";
