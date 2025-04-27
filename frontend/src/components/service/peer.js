@@ -1,12 +1,16 @@
 class PeerService {
     constructor() {
+        this.createPeer();
+    }
+
+    createPeer() {
         this.peer = new RTCPeerConnection({
             iceServers: [{
                 urls: [
                     'stun:stun.l.google.com:19302',
                     'stun:global.stun.twilio.com:3478',
                 ],
-            }, ],
+            }],
         });
 
         // Handle ICE candidates
@@ -27,7 +31,14 @@ class PeerService {
         };
     }
 
+    ensurePeerOpen() {
+        if (this.peer.connectionState === "closed" || this.peer.signalingState === "closed") {
+            this.createPeer();
+        }
+    }
+
     async getOffer() {
+        this.ensurePeerOpen();
         try {
             const offer = await this.peer.createOffer();
             await this.peer.setLocalDescription(new RTCSessionDescription(offer));
@@ -39,7 +50,11 @@ class PeerService {
     }
 
     async getAnswer(offer) {
+        this.ensurePeerOpen();
         try {
+            if (!offer) {
+                throw new Error("Received null offer");
+            }
             await this.peer.setRemoteDescription(new RTCSessionDescription(offer));
             const answer = await this.peer.createAnswer();
             await this.peer.setLocalDescription(new RTCSessionDescription(answer));
@@ -51,7 +66,11 @@ class PeerService {
     }
 
     async setRemoteDescription(answer) {
+        this.ensurePeerOpen();
         try {
+            if (!answer) {
+                throw new Error("Received null answer");
+            }
             await this.peer.setRemoteDescription(new RTCSessionDescription(answer));
         } catch (error) {
             console.error("Error setting remote description:", error);
@@ -59,6 +78,7 @@ class PeerService {
     }
 
     async addStream(stream) {
+        this.ensurePeerOpen();
         try {
             stream.getTracks().forEach(track => {
                 this.peer.addTrack(track, stream);
@@ -79,6 +99,7 @@ class PeerService {
 
     close() {
         this.peer.close();
+        this.createPeer(); // Re-initialize for next call
     }
 }
 
