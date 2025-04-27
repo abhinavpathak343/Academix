@@ -25,14 +25,14 @@ const server = createServer(app); // Create HTTP server
 
 // Configure CORS for Express
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5174'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 
 const io = new Server(server, { // Initialize Socket.IO with HTTP server
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: ['http://localhost:5173'],
     methods: ['GET', 'POST'],
     credentials: true
   }
