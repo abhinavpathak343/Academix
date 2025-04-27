@@ -43,6 +43,10 @@ app.use(bodyParser.json());
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 
+app.get('/', (req, res) => {
+  res.status(200).send('Backend is running!');
+});
+
 // ✅ Google Authentication Route
 app.post('/google-auth', async (req, res) => {
   const {
