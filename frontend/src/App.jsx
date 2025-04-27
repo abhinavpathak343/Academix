@@ -21,7 +21,7 @@ import CourseDescription from "./components/user/Coursedescription";
 import LiveClass from "./components/user/LiveClass.jsx";
 import InitUser from "./components/InitUser";
 // Create a dark theme
-import Room from "./components/user/room.jsx";
+import Room from "./components/user/Room.jsx";
 import { SocketProvider } from "./Providers/socket.jsx";
 const darkTheme = createTheme({
   palette: {
