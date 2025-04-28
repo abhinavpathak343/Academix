@@ -14,8 +14,7 @@ Academix is a modern educational platform offering real-time live classes, secur
 - **🎨 Intuitive Interface** — Clean UI designed for optimal learning
 - **🌐 Full-Stack Deployment** — Frontend on Vercel, Backend on Railway
 - **🔥 Scalable Architecture** — Built for future feature expansion
-- **📊 Progress Tracking** — Monitor your learning journey
-- **👨‍👩‍👧‍👦 Interactive Community** — Connect with fellow learners
+
 
 ## 🛠️ Tech Stack
 
@@ -23,7 +22,7 @@ Academix is a modern educational platform offering real-time live classes, secur
 |----------|-------------|
 | **Frontend** | React, Vite, Tailwind CSS |
 | **Authentication** | Google OAuth 2.0 |
-| **Live Classes** | WebRTC |
+| **Live Classes** | WebRTC,WebSocket's |
 | **Backend** | Node.js, Express |
 | **Database** | MongoDB |
 | **State Management** | React Context API |
