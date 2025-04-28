@@ -10,11 +10,10 @@ class PeerService {
             iceServers: [{
                     urls: 'stun:stun.l.google.com:19302'
                 },
-                // Free test TURN server (for dev only, may be unreliable)
                 {
-                    urls: 'turn:openrelay.metered.ca:80',
-                    username: 'openrelayproject',
-                    credential: 'openrelayproject'
+                    urls: 'turn:your-twilio-turn-url',
+                    username: 'your-twilio-username',
+                    credential: 'your-twilio-credential'
                 }
             ]
         });
