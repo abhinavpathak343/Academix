@@ -59,8 +59,8 @@ class PeerService {
     async getAnswer(offer) {
         this.ensurePeerOpen();
         try {
-            if (!offer) {
-                throw new Error("Received null offer");
+            if (!offer || !offer.type || !offer.sdp) {
+                throw new Error("Received invalid offer for getAnswer");
             }
             await this.peer.setRemoteDescription(new RTCSessionDescription(offer));
             const answer = await this.peer.createAnswer();
@@ -75,15 +75,14 @@ class PeerService {
     async setRemoteDescription(answer) {
         this.ensurePeerOpen();
         try {
-            if (!answer) {
-                throw new Error("Received null answer");
+            if (!answer || !answer.type || !answer.sdp) {
+                throw new Error("Received invalid answer for setRemoteDescription");
             }
             await this.peer.setRemoteDescription(new RTCSessionDescription(answer));
         } catch (error) {
             console.error("Error setting remote description:", error);
         }
     }
-
     async addStream(stream) {
         this.ensurePeerOpen();
         try {

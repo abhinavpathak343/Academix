@@ -35,32 +35,36 @@ const Room = () => {
     setRemoteEmail(email);
   }, []);
 
-  const handleIncomingCall = useCallback(
-    async ({ from, offer }) => {
-      setRemoteSocketId(from);
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      });
-      setMyStream(stream);
-      peerService.addStream(stream);
-      console.log(`Incoming Call`, from, offer);
-      const ans = await peerService.getAnswer(offer);
-      socket.emit("call:accepted", { to: from, ans });
-    },
-    [socket]
-  );
-
-  const handleCallUser = useCallback(async () => {
+const handleIncomingCall = useCallback(
+  async ({ from, offer }) => {
+    setRemoteSocketId(from);
+    // Always create a new peer for a new call
+    peerService.createPeer();
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
     });
     setMyStream(stream);
-    peerService.addStream(stream);
-    const offer = await peerService.getOffer();
-    socket.emit("user:call", { to: remoteSocketId, offer });
-  }, [remoteSocketId, socket]);
+    await peerService.addStream(stream);
+    console.log(`Incoming Call`, from, offer);
+    const ans = await peerService.getAnswer(offer);
+    socket.emit("call:accepted", { to: from, ans });
+  },
+  [socket]
+);
+
+const handleCallUser = useCallback(async () => {
+  // Always create a new peer for a new call
+  peerService.createPeer();
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: true,
+    video: true,
+  });
+  setMyStream(stream);
+  await peerService.addStream(stream);
+  const offer = await peerService.getOffer();
+  socket.emit("user:call", { to: remoteSocketId, offer });
+}, [remoteSocketId, socket]);
 
   const handleCallAccepted = useCallback(
     async ({ from, ans }) => {
