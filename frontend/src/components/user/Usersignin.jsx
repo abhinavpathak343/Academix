@@ -6,6 +6,8 @@ import {
   TextField,
   Button,
   Divider,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -29,6 +31,8 @@ function UserSignin() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userState);
 
@@ -42,15 +46,21 @@ function UserSignin() {
 
         const { email, name, id } = userInfoResponse.data;
 
-        const authResponse = await axios.post(`${BASE_URL}/google-auth`, {
+        // Always use signup operation (like signup page)
+        const signupResponse = await axios.post(`${BASE_URL}/google-auth`, {
           email,
           name,
           googleId: id,
-          operation: "login",
+          operation: "signup",
         });
-
-        localStorage.setItem("token", authResponse.data.token);
-        setUser({ userEmail: email, isLoading: false });
+        localStorage.setItem("token", signupResponse.data.token);
+        setUser({
+          userEmail: email,
+          username: name,
+          token: signupResponse.data.token,
+          isAdmin: false,
+          isLoading: false,
+        });
         navigate("/userhome");
       } catch (error) {
         console.error("Google Login Error:", error.response || error.message);
@@ -80,6 +90,12 @@ function UserSignin() {
         navigate("/userhome");
       }
     } catch (error) {
+      setError(
+        error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : "Invalid username or password."
+      );
+      setOpen(true);
       console.error(
         "Signin error:",
         error.response ? error.response.data : error.message
@@ -87,6 +103,13 @@ function UserSignin() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -313,7 +336,7 @@ function UserSignin() {
               </Typography>
               <Button
                 component={Link}
-                to="/signup"
+                to="/usersignup"
                 sx={{
                   color: "#1A237E",
                   textTransform: "none",
@@ -330,6 +353,11 @@ function UserSignin() {
           </Card>
         </Box>
       </Container>
+      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

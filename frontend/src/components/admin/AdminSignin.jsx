@@ -9,6 +9,8 @@ import {
   Divider,
   IconButton,
   InputAdornment,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -27,6 +29,8 @@ function AdminSignin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userState);
 
@@ -48,11 +52,24 @@ function AdminSignin() {
         navigate("/adminhome");
       }
     } catch (error) {
+      setError(
+        error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : "Invalid username or password."
+      );
+      setOpen(true);
       console.error(
         "Signin error:",
         error.response ? error.response.data : error.message
       );
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -248,6 +265,11 @@ function AdminSignin() {
           </Card>
         </Box>
       </Container>
+      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

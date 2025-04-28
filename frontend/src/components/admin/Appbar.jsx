@@ -61,7 +61,11 @@ function Appbar() {
           <>
             <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }}>
               <Avatar sx={{ bgcolor: "#1A237E", color: "#FFFFFF" }}>
-                {user.userEmail ? user.userEmail[0].toUpperCase() : "A"}
+                {user.username
+                  ? user.username[0].toUpperCase()
+                  : user.userEmail
+                  ? user.userEmail[0].toUpperCase()
+                  : ""}
               </Avatar>
             </IconButton>
 

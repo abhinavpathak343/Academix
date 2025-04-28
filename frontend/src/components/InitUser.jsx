@@ -13,7 +13,8 @@ function InitUser() {
         const decoded = jwtDecode(token); // Use the named import
         setUser({
           isLoading: false,
-          userEmail: decoded.username || decoded.email,
+          userEmail: decoded.email,
+          username: decoded.username || decoded.email,
           token: token,
           isAdmin: decoded.isAdmin || false
         });
