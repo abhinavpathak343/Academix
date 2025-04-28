@@ -47,6 +47,11 @@ class PeerService {
     async getOffer() {
         this.ensurePeerOpen();
         try {
+            // Only create offer if signalingState is 'stable'
+            if (this.peer.signalingState !== "stable") {
+                console.warn("Peer is not stable, skipping offer creation.");
+                return null;
+            }
             const offer = await this.peer.createOffer();
             await this.peer.setLocalDescription(new RTCSessionDescription(offer));
             return offer;
@@ -59,8 +64,8 @@ class PeerService {
     async getAnswer(offer) {
         this.ensurePeerOpen();
         try {
-            if (!offer) {
-                throw new Error("Received null offer");
+            if (!offer || !offer.type || !offer.sdp) {
+                throw new Error("Received invalid offer for getAnswer");
             }
             await this.peer.setRemoteDescription(new RTCSessionDescription(offer));
             const answer = await this.peer.createAnswer();
@@ -72,18 +77,17 @@ class PeerService {
         }
     }
 
-    async setRemoteDescription(answer) {
-        this.ensurePeerOpen();
-        try {
-            if (!answer) {
-                throw new Error("Received null answer");
-            }
-            await this.peer.setRemoteDescription(new RTCSessionDescription(answer));
-        } catch (error) {
-            console.error("Error setting remote description:", error);
-        }
-    }
-
+ async setRemoteDescription(answer) {
+     this.ensurePeerOpen();
+     try {
+         if (!answer || !answer.type || !answer.sdp) {
+             throw new Error("Received invalid answer for setRemoteDescription");
+         }
+         await this.peer.setRemoteDescription(new RTCSessionDescription(answer));
+     } catch (error) {
+         console.error("Error setting remote description:", error);
+     }
+ }
     async addStream(stream) {
         this.ensurePeerOpen();
         try {
