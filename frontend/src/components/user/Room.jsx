@@ -40,6 +40,7 @@ const handleIncomingCall = useCallback(
     setRemoteSocketId(from);
     // Always create a new peer for a new call
     peerService.createPeer();
+    attachTrackHandler();
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
@@ -56,6 +57,7 @@ const handleIncomingCall = useCallback(
 const handleCallUser = useCallback(async () => {
   // Always create a new peer for a new call
   peerService.createPeer();
+  attachTrackHandler();
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: true,
     video: true,
@@ -133,6 +135,12 @@ const handleCallUser = useCallback(async () => {
     navigate("/Liveclass");
   }, [myStream, remoteStream, navigate]);
 
+  const attachTrackHandler = useCallback(() => {
+    peerService.peer.addEventListener("track", (e) => {
+      setRemoteStream(e.streams[0]);
+    });
+  }, [peerService]);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -190,6 +198,12 @@ const handleCallUser = useCallback(async () => {
       peerService.peer.removeEventListener("negotiationneeded", handleNegoNeeded);
     };
   }, [handleNegoNeeded, socket, remoteSocketId]);
+
+  useEffect(() => {
+    peerService.setOnTrack((e) => {
+      setRemoteStream(e.streams[0]);
+    });
+  }, [peerService]);
 
   return (
     <Box

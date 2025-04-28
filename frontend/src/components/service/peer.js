@@ -1,17 +1,26 @@
 class PeerService {
     constructor() {
         this.createPeer();
+        this.pendingCandidates = [];
+        this.remoteDescriptionSet = false;
     }
 
     createPeer() {
         this.peer = new RTCPeerConnection({
             iceServers: [{
-                urls: [
-                    'stun:stun.l.google.com:19302',
-                    'stun:global.stun.twilio.com:3478',
-                ],
-            }],
+                    urls: 'stun:stun.l.google.com:19302'
+                },
+                // Free test TURN server (for dev only, may be unreliable)
+                {
+                    urls: 'turn:openrelay.metered.ca:80',
+                    username: 'openrelayproject',
+                    credential: 'openrelayproject'
+                }
+            ]
         });
+
+        this.pendingCandidates = [];
+        this.remoteDescriptionSet = false;
 
         // Handle ICE candidates
         this.peer.onicecandidate = (event) => {
@@ -79,6 +88,12 @@ class PeerService {
                 throw new Error("Received invalid answer for setRemoteDescription");
             }
             await this.peer.setRemoteDescription(new RTCSessionDescription(answer));
+            this.remoteDescriptionSet = true;
+            // Add any pending ICE candidates
+            while (this.pendingCandidates.length > 0) {
+                const candidate = this.pendingCandidates.shift();
+                await this.addIceCandidate(candidate);
+            }
         } catch (error) {
             console.error("Error setting remote description:", error);
         }
@@ -97,6 +112,11 @@ class PeerService {
     async addIceCandidate(candidate) {
         if (this.isPeerClosed()) {
             console.warn("Peer is closed, ignoring ICE candidate");
+            return;
+        }
+        if (!this.remoteDescriptionSet) {
+            // Buffer the candidate until remote description is set
+            this.pendingCandidates.push(candidate);
             return;
         }
         try {
@@ -118,6 +138,10 @@ class PeerService {
     close() {
         this.peer.close();
         this.createPeer(); // Re-initialize for next call
+    }
+
+    setOnTrack(callback) {
+        this.peer.ontrack = callback;
     }
 }
 
