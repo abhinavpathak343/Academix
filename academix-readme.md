@@ -3,10 +3,7 @@
 Academix is a modern educational platform offering real-time live classes, secure Google OAuth login, and a seamless, fast learning experience. Built with cutting-edge web technologies for optimal performance and scalability.
 
 [![Visit Academix](https://img.shields.io/badge/Visit-Academix-4F46E5?style=for-the-badge&logo=vercel)](https://academix-oz6b.vercel.app/)
-[![GitHub Stars](https://img.shields.io/github/stars/academix/repo?style=for-the-badge&color=FACC15&logo=github)](https://github.com/academix/repo)
-[![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 
-![Academix Platform](https://via.placeholder.com/1200x600)
 
 ## 🚀 Features
 
@@ -71,31 +68,6 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) to see Academix in action!
-
-## 📦 Project Structure
-
-```
-academix/
-├── public/            # Static assets
-├── src/
-│   ├── components/    # UI components
-│   │   ├── auth/      # Authentication components
-│   │   ├── classroom/ # Live classroom components
-│   │   ├── dashboard/ # User dashboard components
-│   │   └── common/    # Shared UI elements
-│   ├── contexts/      # React contexts
-│   ├── hooks/         # Custom React hooks
-│   ├── pages/         # Application pages
-│   ├── services/      # API services
-│   ├── styles/        # Global styles
-│   └── utils/         # Helper functions
-├── .env.example       # Environment variables template
-├── index.html         # Entry HTML file
-├── package.json       # Dependencies and scripts
-├── tailwind.config.js # TailwindCSS configuration
-└── vite.config.js     # Vite configuration
-```
 
 ## 💡 Key Features in Depth
 
@@ -118,28 +90,5 @@ User security is paramount at Academix. Our authentication system:
 - Maintains proper RBAC (Role-Based Access Control)
 - Complies with data protection regulations
 
-## 🤝 Contributing
 
-We welcome contributions from the community! Please check out our [contributing guidelines](CONTRIBUTING.md) to get started.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Support
-
-Having issues or questions? Join our [Discord community](https://discord.gg/academix) or reach out via [support@academix.edu](mailto:support@academix.edu).
-
----
-
-<p align="center">
-  Made with ❤️ by the Academix Team • 
-  <a href="https://twitter.com/academix_edu">Twitter</a> • 
-  <a href="https://linkedin.com/company/academix-education">LinkedIn</a>
-</p>
+ 
