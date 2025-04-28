@@ -6,17 +6,22 @@ class PeerService {
     }
 
     createPeer() {
-        this.peer = new RTCPeerConnection({
-            iceServers: [{
-                    urls: 'stun:stun.l.google.com:19302'
-                },
-                {
-                    urls: 'turn:global.turn.twilio.com:3478?transport=udp',
-                    username: 'YOUR_TWILIO_USERNAME',
-                    credential: 'YOUR_TWILIO_CREDENTIAL'
-                }
-            ]
-        });
+this.peer = new RTCPeerConnection({
+    iceServers: [{
+            urls: 'stun:stun.l.google.com:19302'
+        },
+        {
+            urls: 'stun:stun1.l.google.com:19302'
+        },
+        {
+            urls: 'stun:stun2.l.google.com:19302'
+        },
+        {
+            urls: 'stun:openrelay.metered.ca:80'
+        }
+    ]
+});
+
 
         this.pendingCandidates = [];
         this.remoteDescriptionSet = false;
