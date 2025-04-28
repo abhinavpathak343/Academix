@@ -46,27 +46,76 @@ function UserSignin() {
 
         const { email, name, id } = userInfoResponse.data;
 
-        // Always use signup operation (like signup page)
-        const signupResponse = await axios.post(`${BASE_URL}/google-auth`, {
-          email,
-          name,
-          googleId: id,
-          operation: "signup",
-        });
-        localStorage.setItem("token", signupResponse.data.token);
-        setUser({
-          userEmail: email,
-          username: name,
-          token: signupResponse.data.token,
-          isAdmin: false,
-          isLoading: false,
-        });
-        navigate("/userhome");
+        try {
+          // Try login first
+          const loginResponse = await axios.post(`${BASE_URL}/google-auth`, {
+            email,
+            name,
+            googleId: id,
+            operation: "login",
+          });
+          localStorage.setItem("token", loginResponse.data.token);
+          setUser({
+            userEmail: email,
+            username: name,
+            token: loginResponse.data.token,
+            isAdmin: false,
+            isLoading: false,
+          });
+          navigate("/userhome");
+        } catch (loginError) {
+          // If user not found, try signup
+          if (
+            loginError.response &&
+            loginError.response.data &&
+            loginError.response.data.message === "User not found"
+          ) {
+            try {
+              const signupResponse = await axios.post(`${BASE_URL}/google-auth`, {
+                email,
+                name,
+                googleId: id,
+                operation: "signup",
+              });
+              localStorage.setItem("token", signupResponse.data.token);
+              setUser({
+                userEmail: email,
+                username: name,
+                token: signupResponse.data.token,
+                isAdmin: false,
+                isLoading: false,
+              });
+              navigate("/userhome");
+            } catch (signupError) {
+              // Handle signup error (e.g., user already exists with different Google ID)
+              setError(
+                signupError.response && signupError.response.data && signupError.response.data.message
+                  ? signupError.response.data.message
+                  : "Google sign-in failed. Please try again."
+              );
+              setOpen(true);
+              console.error("Google Signup Error:", signupError.response || signupError.message);
+            }
+          } else {
+            // Handle other login errors
+            setError(
+              loginError.response && loginError.response.data && loginError.response.data.message
+                ? loginError.response.data.message
+                : "Google sign-in failed. Please try again."
+            );
+            setOpen(true);
+            console.error("Google Login Error:", loginError.response || loginError.message);
+          }
+        }
       } catch (error) {
+        setError("Google sign-in failed. Please try again.");
+        setOpen(true);
         console.error("Google Login Error:", error.response || error.message);
       }
     },
     onError: (error) => {
+      setError("Google sign-in failed. Please try again.");
+      setOpen(true);
       console.error("Google Login Error:", error);
     },
   });
