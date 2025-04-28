@@ -22,7 +22,7 @@ Academix is a modern educational platform offering real-time live classes, secur
 |----------|-------------|
 | **Frontend** | React, Vite, Tailwind CSS |
 | **Authentication** | Google OAuth 2.0 |
-| **Live Classes** | WebRTC |
+| **Live Classes** | WebRTC,WebSocket's |
 | **Backend** | Node.js, Express |
 | **Database** | MongoDB |
 | **State Management** | React Context API |
