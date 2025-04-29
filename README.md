@@ -72,7 +72,7 @@ npm run dev
 
 ### WebRTC Live Classes
 
-Academix leverages WebRTC technology to provide high-quality, low-latency video streaming for virtual classrooms. Features include:
+Academix leverages WebRTC technology to provide high-quality, low-latency video streaming for virtual classrooms.
 
 ### Secure Authentication
 
