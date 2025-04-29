@@ -74,12 +74,6 @@ npm run dev
 
 Academix leverages WebRTC technology to provide high-quality, low-latency video streaming for virtual classrooms. Features include:
 
-- Screen sharing capabilities
-- Interactive whiteboard
-- Real-time chat functionality
-- Breakout rooms for group activities
-- Session recording and playback
-
 ### Secure Authentication
 
 User security is paramount at Academix. Our authentication system:
