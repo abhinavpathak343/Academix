@@ -1,2 +1,2 @@
 export const BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:9010";
+  import.meta.env.VITE_API_URL||"http://localhost:9010";
