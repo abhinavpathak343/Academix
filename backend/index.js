@@ -30,7 +30,7 @@ app.use(cors({
   origin: [
     'http://localhost:5174',
     'https://academix-oz6b.vercel.app',
-    'https://your-backend-on-render.onrender.com'
+   'https://academixnew.onrender.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
@@ -41,7 +41,7 @@ const io = new Server(server, { // Initialize Socket.IO with HTTP server
     origin: [
       'http://localhost:5174',
       'https://academix-oz6b.vercel.app',
-      'https://your-backend-on-render.onrender.com'
+      'https://academixnew.onrender.com'
     ],
     methods: ['GET', 'POST'],
     credentials: true

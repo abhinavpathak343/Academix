@@ -12,7 +12,7 @@ Academix is a modern educational platform offering real-time live classes, secur
 - **🔒 Google OAuth Authentication** — Secure and hassle-free login/signup flow
 - **📱 Fully Responsive** — Perfect experience on desktop, tablet, and mobile
 - **🎨 Intuitive Interface** — Clean UI designed for optimal learning
-- **🌐 Full-Stack Deployment** — Frontend on Vercel, Backend on Railway
+- **🌐 Full-Stack Deployment** — Frontend on Vercel, Backend on Render
 - **🔥 Scalable Architecture** — Built for future feature expansion
 
 
@@ -26,7 +26,7 @@ Academix is a modern educational platform offering real-time live classes, secur
 | **Backend** | Node.js, Express |
 | **Database** | MongoDB |
 | **State Management** | React Context API |
-| **Deployment** | Vercel (Frontend), Railway (Backend) |
+| **Deployment** | Vercel (Frontend), Render (backend) |
 
 ## ⚙️ Architecture
 
@@ -34,7 +34,7 @@ Academix is a modern educational platform offering real-time live classes, secur
   ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
   │             │       │             │       │             │
   │  Frontend   │◄─────►│   Backend   │◄─────►│  Database   │
-  │  (Vercel)   │       │  (Railway)  │       │ (MongoDB)   │
+  │  (Vercel)   │       │  (Render)              (MongoDB)
   │             │       │             │       │             │
   └─────────────┘       └─────────────┘       └─────────────┘
          ▲                     ▲                    
