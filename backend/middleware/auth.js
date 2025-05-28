@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export const SECRET = 'SECr3t'; // Ideally, store this in an environment variable
-
+export const SECRET = process.env.JWT_SECRET;
 export const authenticateJwt = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {

@@ -1,13 +1,11 @@
 import mongoose from 'mongoose';
-
-// Database connection
-
-
-
+import dotenv from 'dotenv';
+dotenv.config();
+const uri = process.env.MONGODB_URI;
 // Database connection
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://10abhinavpathak:abhi@cluster0.7xtoz.mongodb.net/courses', {
+    await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });

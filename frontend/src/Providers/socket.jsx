@@ -9,7 +9,7 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = (props) => {
-  const socket = useMemo(() => io(import.meta.env.VITE_WS_URL, {
+  const socket = useMemo(() => io(import.meta.env.VITE_WS_URL||"http://localhost:9010", {
     withCredentials: true,
     transports: ['websocket', 'polling']
   }), []);

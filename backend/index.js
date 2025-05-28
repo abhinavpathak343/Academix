@@ -17,6 +17,8 @@ import {
   SECRET
 } from './middleware/auth.js';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
 connectDB();
 
@@ -27,7 +29,8 @@ const server = createServer(app); // Create HTTP server
 app.use(cors({
   origin: [
     'http://localhost:5174',
-    'https://academix-oz6b.vercel.app'
+    'https://academix-oz6b.vercel.app',
+    'https://your-backend-on-render.onrender.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
@@ -36,8 +39,9 @@ app.use(cors({
 const io = new Server(server, { // Initialize Socket.IO with HTTP server
   cors: {
     origin: [
-      'http://localhost:5173',
-      'https://academix-oz6b.vercel.app'
+      'http://localhost:5174',
+      'https://academix-oz6b.vercel.app',
+      'https://your-backend-on-render.onrender.com'
     ],
     methods: ['GET', 'POST'],
     credentials: true
